@@ -1,0 +1,25 @@
+Why?
+-Familiar programming model
+-Secure
+-No javascript
+
+All server side
+-Validation
+-Listeners
+-vs jsf
+
+Speed
+-benchmark on amazon
+-page reload vs just event
+-static content
+
+Scala
+-java slide
+-scala slide
+-declarative
+-support for templates
+-scaladin v2
+-mvc
+
+
++JRebel
