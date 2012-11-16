@@ -2,7 +2,7 @@
 
 name := "Vaadin Scala project"
  
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.0-RC2"
  
 seq(webSettings: _*)
 
@@ -14,8 +14,8 @@ resolvers += "Vaadin add-ons repository" at "http://maven.vaadin.com/vaadin-addo
 
 // basic dependencies
 libraryDependencies ++= Seq(
-  "com.vaadin" % "vaadin" % "6.8.5",
-  "org.vaadin.addons" % "scaladin" % "2.1.0",
+//  "com.vaadin" % "vaadin" % "6.8.5",
+//  "org.vaadin.addons" % "scaladin" % "2.1.0",
   "org.eclipse.jetty" % "jetty-webapp" % "8.0.4.v20111024" % "container"
 )
 
