@@ -5,22 +5,38 @@ import com.vaadin.navigator.{ViewDisplay, View, Navigator}
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 
 class VaadinScalaApplication extends UI {
-  val navigator = new Navigator(p, new ViewDisplay {
+
+  case class TabView(name: String) extends VerticalLayout with View {
+    def enter(event: ViewChangeEvent) {
+      //showing that state persists and lazy load
+      components ++= Seq(
+        Label(name)
+        , Button(caption = name, clickListener = Notification.show("Clicked " + name))
+      )
+      Notification.show("Entered " + name + " with params " + event.getParameters)
+    }
+  }
+
+  val views = Map("" -> TabView("Main"), "hello" -> TabView("Hello"))
+  val root = new VerticalLayout {
+    val menu = add(new MenuBar {
+      views.foreach {
+        case (url, view@TabView(name)) =>
+          addItem(name, _ => navigator.navigateTo(url + "/param123"))
+          navigator.addView(url, view)
+      }
+    })
+    val content = add(new VerticalLayout())
+  }
+  content = root
+  lazy val navigator: Navigator = new Navigator(p, new ViewDisplay {
     def showView(view: View) {
-      println(view)
-      content = view.asInstanceOf[ComponentContainer]
+      root.content.removeAllComponents()
+      root.content.add(view.asInstanceOf[Component])
     }
   })
-  navigator.addView("", newView("This Vaadin app uses Scaladin!!!!!"))
-  navigator.addView("hello", newView("HGello !!!This Vaadin app uses Scaladin!!!!!"))
 
-  def newView(labelValue: String) = new VerticalLayout with View {
-    margin = true
-    components ++= Seq(Label(labelValue),
-      Button("hekkoi", navigator.navigateTo("hello")))
-
-    def enter(event: ViewChangeEvent) {}
-  }
   p.setNavigator(navigator)
+  navigator.setErrorView(TabView("Error"))
   navigator.navigate()
 }
