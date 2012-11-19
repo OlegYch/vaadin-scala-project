@@ -6,18 +6,25 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent
 
 class VaadinScalaApplication extends UI {
 
-  case class TabView(name: String) extends VerticalLayout with View {
+  def stubContent(name: String) =
+    Label(name) ::
+        Button(caption = name, clickListener = Notification.show("Clicked " + name)) ::
+        Nil
+
+  case class TabView(name: String)(content: => Seq[Component] = stubContent(name))
+      extends VerticalLayout with View {
     def enter(event: ViewChangeEvent) {
-      //showing that state persists and lazy load
-      components ++= Seq(
-        Label(name)
-        , Button(caption = name, clickListener = Notification.show("Clicked " + name))
-      )
+      //showing that state persists and lazy loading is possible
+      components ++= content
       Notification.show("Entered " + name + " with params " + event.getParameters)
     }
   }
 
-  val views = Map("" -> TabView("Main"), "hello" -> TabView("Hello"))
+  val views = Map(
+    "" -> TabView("Main")()
+    , "hello" -> TabView("Hello")()
+    , "transaction" -> TabView("Transaction")(new TransactionPage :: Nil)
+  )
   val root = new VerticalLayout {
     val menu = add(new MenuBar {
       views.foreach {
@@ -37,6 +44,6 @@ class VaadinScalaApplication extends UI {
   })
 
   p.setNavigator(navigator)
-  navigator.setErrorView(TabView("Error"))
+  navigator.setErrorView(TabView("Error")())
   navigator.navigate()
 }
