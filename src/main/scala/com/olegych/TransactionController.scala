@@ -4,7 +4,7 @@ import beans.BeanInfo
 
 /**
   */
-class TransactionController(var model: TransactionModel = TransactionModel(1, progress = 0.5f)) {
+class TransactionController(var model: TransactionModel = TransactionModel()) {
   def start(done: => Unit) {
     new Thread {
       override def run = {
@@ -19,4 +19,5 @@ class TransactionController(var model: TransactionModel = TransactionModel(1, pr
   }
 }
 
-@BeanInfo case class TransactionModel(var price: Double, var progress: Float)
+@BeanInfo case class TransactionModel(var price: Double = 1, var progress: Float = 0.5f,
+                                      var params: String = "")

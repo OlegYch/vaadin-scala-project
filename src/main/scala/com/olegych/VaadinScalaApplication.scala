@@ -15,8 +15,12 @@ class VaadinScalaApplication extends UI {
       extends VerticalLayout with View {
     def enter(event: ViewChangeEvent) {
       //showing that state persists and lazy loading is possible
-      components ++= content
-      Notification.show("Entered " + name + " with params " + event.getParameters)
+      val params = event.getParameters
+      content.collect {
+        case page: BasePage => add(page).init(params)
+        case view => add(view)
+      }
+      Notification.show("Entered " + name + " with params " + params)
     }
   }
 
